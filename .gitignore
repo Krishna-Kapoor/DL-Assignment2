@@ -1,0 +1,36 @@
+﻿# Python cache files
+__pycache__/
+Code/__pycache__/
+*.py[cod]
+*.pyo
+
+# Virtual environment
+.venv/
+venv/
+env/
+
+# Jupyter Notebooks checkpoints
+.ipynb_checkpoints/
+
+# VS Code settings
+.vscode/
+
+# Model weights and checkpoints
+*.pth
+*.pt
+*.ckpt
+
+# Logs and output files
+*.log
+runs/
+outputs/
+
+# Data folders (too large to push)
+data/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Other repo folders accidentally copied in
+krishna-joshi-idl26-final/
