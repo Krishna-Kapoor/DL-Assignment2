@@ -6,7 +6,7 @@ MG 6/6/2026
 import torch
 import torch.nn as nn
 
-activation_str = "ReLU"  # Placeholder for activation function, can be replaced with "ReLU" or others as needed.
+activation_str = "ReLU"  # Placeholder for activation function, can be replaced with "ReLU" or others as needed---Bug6
 
 
 class VGGBlock(nn.Module):
@@ -24,7 +24,7 @@ class VGGBlock(nn.Module):
             layers.append(nn.Conv2d(current_in_channels, out_channels, kernel_size=kernel_size, padding=padding))
             layers.append(nn.BatchNorm2d(out_channels))
             layers.append(nn.ReLU(inplace=True))
-               # Update channels for next convolution
+               # Update channels for next convolution----Bug7
             current_in_channels = out_channels
         layers.append(nn.MaxPool2d(kernel_size=2, stride=2))
         self.block = nn.Sequential(*layers)
@@ -90,7 +90,7 @@ class AlexNet(nn.Module):
         
         self.classifier = nn.Sequential(
             nn.Dropout(p=drop_rate),
-            nn.Linear(2048, 1024),
+            nn.Linear(3072, 1024),
             nn.ReLU(inplace=True),
             nn.Dropout(p=drop_rate),
             nn.Linear(1024, 1024),
@@ -179,4 +179,4 @@ class ResNet18(nn.Module):
         out = self.avgpool(out)
         out = torch.flatten(out, 1)
         return self.classifier(out)
-# returning the final output
+# returning the final output----Bug8

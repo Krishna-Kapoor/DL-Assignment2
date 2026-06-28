@@ -15,11 +15,11 @@ class Trainer:
     def train_one_epoch(self, dataloader):
         self.model.train()
         running_loss = 0.0
-        correct, total = 0, 0    # Replaced sum variable with total as sum is a built-in function in python and variable names cannot be built-in functions
+        correct, total = 0, 0    # Replaced sum variable with total as sum is a built-in function in python and variable names cannot be built-in functions----Bug5
         
         for images, labels in dataloader:
             images, labels = images.to(self.device), labels.to(self.device)
-            self.optimizer.zero_grad()
+            self.optimizer.zero_grad()  # Added zero_grad function since pytorch accumulates gradients by default----Bug9
             
             outputs = self.model(images)
             loss = self.criterion(outputs, labels)
