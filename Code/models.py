@@ -63,13 +63,13 @@ class ResBlock(nn.Module):
 
 class AlexNet(nn.Module):
     """AlexNet (Krizhevsky et al., 2012) adapted for smaller inputs."""
-    def __init__(self, **kwargs):
+    def __init__(self, in_channels, num_classes, **kwargs):      #Added no. of channels and no. of classes here also to avoid run time error 
         super().__init__()
 
         drop_rate = kwargs.get("drop_rate", 0.5)
         
         self.features = nn.Sequential(
-            nn.Conv2d(3, 48, kernel_size=7, stride=2, padding=3),
+            nn.Conv2d(in_channels, 48, kernel_size=7, stride=2, padding=3),  #added refractoring so that it does not change when no. of channels and no. of classes in config.json file changes -----bug 14
             nn.BatchNorm2d(48),
             nn.ReLU(inplace=True),
             nn.MaxPool2d(kernel_size=3, stride=2, padding=1),
@@ -90,12 +90,12 @@ class AlexNet(nn.Module):
         
         self.classifier = nn.Sequential(
             nn.Dropout(p=drop_rate),
-            nn.Linear(3072, 1024),
+            nn.Linear(3072, 1024),            # mat1 and mat2 shapes cannot be multiplied (32x3072 and 2048x1024)----bug10
             nn.ReLU(inplace=True),
             nn.Dropout(p=drop_rate),
             nn.Linear(1024, 1024),
             nn.ReLU(inplace=True),
-            nn.Linear(1024, 11),
+            nn.Linear(1024, num_classes),
         )
 
     def forward(self, x):
@@ -120,7 +120,7 @@ class VGG16(nn.Module):
         )
         
         self.classifier = nn.Sequential(
-            nn.Linear(2048, 1024),
+            nn.Linear(4608, 1024),       # changed the shape of 2048 to 4608 to resolve runtime error which showed mat1 and mat2 shapes cannot be multiplied (32x4608 and 2048x1024)---Bug14
             nn.ReLU(inplace=True),
             nn.Dropout(p=drop_rate),
             nn.Linear(1024, 512),
@@ -178,5 +178,29 @@ class ResNet18(nn.Module):
         out = self.stage4(out)
         out = self.avgpool(out)
         out = torch.flatten(out, 1)
-        return self.classifier(out)
-# returning the final output----Bug8
+        return self.classifier(out)         # returning the final output----Bug8
+
+class GreenNet(nn.Module):
+    def __init__(self,in_channels,num_classes, **kwargs):
+        super().__init__()
+        self.network=nn.Sequential(
+            nn.Conv2d(in_channels,16,kernel_size=3,padding=1),
+            nn.BatchNorm2d(16),
+            nn.ReLU(inplace=True),
+            nn.MaxPool2d(2,2),
+            nn.Conv2d(16,32,kernel_size=3,padding=1),
+            nn.BatchNorm2d(32),
+            nn.ReLU(inplace=True),
+            nn.Conv2d(32,64,kernel_size=3,padding=1),
+            nn.ReLU(inplace=True),
+            nn.MaxPool2d(2,2)
+              )
+        self.classifier=nn.Sequential(
+            nn.Linear(16384,64),
+            nn.ReLU(inplace=True),
+            nn.Linear(64,num_classes)
+        )
+    def forward(self, x):
+        x = self.network(x)
+        x = torch.flatten(x, 1)
+        return self.classifier(x)

@@ -1,10 +1,13 @@
 {
     "DATA": "cells",
     "DATA_PATH": "Data",
-    "MODEL": "AlexNet",
+    "MODEL": "VGG16",
     "CHANNELS": 3,
     "NUM_CLASSES": 8,
     "BATCH_SIZE": 32,
     "LEARNING_RATE": 0.001,
-    "EPOCHS": 7
+    "EPOCHS": 5,
+    "DROPOUT_RATE" : 0.5,
+    "ACTIVATION_STR" : "ReLU",
+    "WEIGHT_DECAY": 1e-4
 }
